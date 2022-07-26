@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Users.Commands.CreateUser;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,26 @@ namespace WebApi.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+        private readonly IMediator _mediator;
 
+        public AuthenticationController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<IActionResult> Login()
+        {
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<IActionResult> Register(CreateUserCommand createUserCommand)
+        {
+            await _mediator.Send(createUserCommand);
+            return Ok();
+        }
     }
 }

@@ -1,3 +1,6 @@
+using Application;
+using FluentValidation.AspNetCore;
+using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,11 +9,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using WebApi.Filters;
 
 namespace WebApi
 {
@@ -23,18 +29,36 @@ namespace WebApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationServices();
+            services.AddInfrastructureServices(Configuration);
 
-            services.AddControllers();
+            services.AddAuthentication("OAuth")
+                .AddJwtBearer("OAuth", config =>
+                {
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]));
+
+                    config.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Configuration["Jwt:Iss"],
+                        ValidAudience = Configuration["Jwt:Aud"],
+                        IssuerSigningKey = key
+                    };
+                });
+
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ApiExceptionFilterAttribute>();
+            })
+            .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" });
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
