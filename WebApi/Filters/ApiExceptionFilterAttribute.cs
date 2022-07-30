@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
+using WebApi.ProblemDetailses;
 
 namespace WebApi.Filters
 {
@@ -16,7 +17,8 @@ namespace WebApi.Filters
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
                 { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException }
+                { typeof(NotFoundException), HandleNotFoundException },
+                { typeof(UnauthorizedException), HandleUnauthorizedExceptionException }
             };
         }
 
@@ -34,6 +36,20 @@ namespace WebApi.Filters
             {
                 _exceptionHandlers[type].Invoke(context);
             }
+        }
+
+        private void HandleUnauthorizedExceptionException(ExceptionContext context)
+        {
+            var exception = (UnauthorizedException)context.Exception;
+
+            var details = new AuthorizationProblemDetails(exception.Errors)
+            {
+                Type = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1"
+            };
+
+            context.Result = new UnauthorizedObjectResult(details);
+
+            context.ExceptionHandled = true;
         }
 
         private void HandleNotFoundException(ExceptionContext context)

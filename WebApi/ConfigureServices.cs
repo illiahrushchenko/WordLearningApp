@@ -1,10 +1,12 @@
-﻿using FluentValidation.AspNetCore;
+﻿using Application.Common.Interfaces;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using WebApi.Filters;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -12,6 +14,10 @@ namespace WebApi
     {
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
+            services.AddHttpContextAccessor();
+
             services.AddAuthentication("OAuth")
                 .AddJwtBearer("OAuth", config =>
                 {

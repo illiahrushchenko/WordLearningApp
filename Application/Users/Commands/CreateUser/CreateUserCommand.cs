@@ -39,7 +39,7 @@ namespace Application.Users.Commands.CreateUser
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(x => x.Description).ToArray();
-                throw new ValidationException(errors);
+                throw new UnauthorizedException(errors);
             }
 
             return Unit.Value;
