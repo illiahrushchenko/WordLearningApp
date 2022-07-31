@@ -10,7 +10,7 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
 
-        public ModuleItem ModuleItem { get; set; }
+        public Card ModuleItem { get; set; }
         public int ModuleItemId { get; set; }
 
         public LearningProgress LearningProgress { get; set; }

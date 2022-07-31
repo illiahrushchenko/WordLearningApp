@@ -15,6 +15,6 @@ namespace Domain.Entities
         public User Owner { get; set; }
         public int OwnerId { get; set; }
 
-        public List<ModuleItem> ModuleItems { get; set; }
+        public List<Card> ModuleItems { get; set; }
     }
 }
