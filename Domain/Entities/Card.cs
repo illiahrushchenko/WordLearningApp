@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Card
+    public class Card : EntityBase
     {
-        public int Id { get; set; }
         public string Term { get; set; }
         public string Definition { get; set; }
 

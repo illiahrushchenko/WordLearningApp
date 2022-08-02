@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class LearningProgressItem
+    public class LearningProgressItem : EntityBase
     {
-        public int Id { get; set; }
-
         public Card ModuleItem { get; set; }
         public int ModuleItemId { get; set; }
 

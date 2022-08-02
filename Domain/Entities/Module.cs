@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Module
+    public class Module : EntityBase
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Note { get; set; }
 
         public User Owner { get; set; }
         public int OwnerId { get; set; }
 
-        public List<Card> ModuleItems { get; set; }
+        public List<Card> Words { get; set; }
     }
 }
