@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using Respawn;
+using Respawn.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +22,18 @@ namespace Application.IntegrationTests
     {
         private static WebApplicationFactory<Startup> _factory = null!;
         private static IServiceScopeFactory _scopeFactory = null!;
+        private static Checkpoint _checkpoint = null!;
 
         [OneTimeSetUp]
         public void RunBeforeAnyTests()
         {
             _factory = new CustomWebApplicationFactory();
             _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
+
+            _checkpoint = new Checkpoint
+            {
+                TablesToIgnore = new Table[] { new Table("__EFMigrationsHistory") }
+            };
         }
 
         public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
@@ -37,7 +45,7 @@ namespace Application.IntegrationTests
             return await mediator.Send(request);
         }
 
-        public static async Task<int> CreateUser(string email, string userName, string password)
+        public static async Task<int> CreateUserAsync(string email, string userName, string password)
         {
             using var scope = _scopeFactory.CreateScope();
 
@@ -83,6 +91,15 @@ namespace Application.IntegrationTests
             await context.SaveChangesAsync();
 
             return entity.Id;
+        }
+
+        public static async Task ResetAsync()
+        {
+            using var scope = _scopeFactory.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            await context.Database.EnsureDeletedAsync();
         }
     }
 }

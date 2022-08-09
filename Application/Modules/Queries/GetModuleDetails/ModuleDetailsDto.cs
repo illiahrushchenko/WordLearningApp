@@ -4,17 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.Modules.Queries.GetModuleDetails
 {
-    public class Module : EntityBase
+    public class ModuleDetailsDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Note { get; set; }
         public bool IsPublic { get; set; }
-
-        public User Owner { get; set; }
-        public int OwnerId { get; set; }
-
-        public List<Card> Words { get; set; }
+        public List<CardDto> Words { get; set; }
     }
 }

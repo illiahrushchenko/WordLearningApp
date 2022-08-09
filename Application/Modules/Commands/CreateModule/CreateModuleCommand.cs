@@ -1,4 +1,9 @@
-﻿using MediatR;
+﻿using Application.Common.Exceptions;
+using AutoMapper;
+using Domain.Entities;
+using Infrastructure.Persistence;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +15,7 @@ namespace Application.Modules.Commands.CreateModule
         public string OwnerEmail { get; set; }
         public string Name { get; set; }
         public string Note { get; set; }
+        public bool IsPublic { get; set; }
 
         public List<CreateCardCommand> Words { get; set; }
     }
@@ -22,9 +28,34 @@ namespace Application.Modules.Commands.CreateModule
 
     public class CreateModuleCommandHandler : IRequestHandler<CreateModuleCommand, int>
     {
-        public Task<int> Handle(CreateModuleCommand request, CancellationToken cancellationToken)
+        private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
+
+        public CreateModuleCommandHandler(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
         {
-            throw new System.NotImplementedException();
+            _context = context;
+            _mapper = mapper;
+            _userManager = userManager;
+        }
+
+        public async Task<int> Handle(CreateModuleCommand request, CancellationToken cancellationToken)
+        {
+            var module = _mapper.Map<Module>(request);
+
+            var user = await _userManager.FindByEmailAsync(request.OwnerEmail);
+
+            if(user == null)
+            {
+                throw new NotFoundException(nameof(Module), request.OwnerEmail );
+            }
+
+            module.OwnerId = user.Id;
+
+            await _context.Modules.AddAsync(module, cancellationToken);
+            await _context.SaveChangesAsync();
+
+            return module.Id;
         }
     }
 }

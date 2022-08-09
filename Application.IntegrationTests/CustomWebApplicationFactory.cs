@@ -18,16 +18,16 @@ namespace Application.IntegrationTests
     {
         class CustomWebApplicationFactory : WebApplicationFactory<Startup>
         {
-            private readonly string _dbName = Guid.NewGuid().ToString();
-
             protected override void ConfigureWebHost(IWebHostBuilder builder)
             {
                 base.ConfigureWebHost(builder);
                 builder.ConfigureServices(services =>
                 {
+                    var serviceDescriptor = services.FirstOrDefault(descriptor => descriptor.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+                    services.Remove(serviceDescriptor);
                     services.AddDbContext<ApplicationDbContext>(options =>
                     {
-                        options.UseInMemoryDatabase(_dbName);
+                        options.UseInMemoryDatabase("TestDb");
                     });
                 });
             }

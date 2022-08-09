@@ -15,12 +15,13 @@ namespace Application.IntegrationTests.Modules.Commands
         {
             var email = "andrew@mail.com";
 
-            var userId = await Testing.CreateUser(email, "Andrew", "1234");
+            var userId = await Testing.CreateUserAsync(email, "Andrew", "1234");
 
             var command = new CreateModuleCommand
             {
                 Name = "Animals",
                 OwnerEmail = email,
+                IsPublic = true,
                 Words = new List<CreateCardCommand>
                 {
                     new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
@@ -35,6 +36,8 @@ namespace Application.IntegrationTests.Modules.Commands
             module.Should().NotBeNull();
             module.OwnerId.Should().Be(userId);
             module.Name.Should().Be(command.Name);
+
+            await Testing.ResetAsync();
         }
 
         [Test]
@@ -44,6 +47,7 @@ namespace Application.IntegrationTests.Modules.Commands
             {
                 Name = "Animals",
                 OwnerEmail = "andrew@mail.com",
+                IsPublic = true,
                 Words = new List<CreateCardCommand>
                 {
                     new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
@@ -53,6 +57,8 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
+
+            await Testing.ResetAsync();
         }
     }
 }

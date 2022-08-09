@@ -9,13 +9,12 @@ namespace Infrastructure.Persistence
     {
         public DbSet<Module> Modules { get; set; }
         public DbSet<Card> Cards { get; set; }
-        public DbSet<LearningProgress> LearningProgresses { get; set; }
-        public DbSet<LearningProgressItem> LearningProgressItems { get; set; }
+        //public DbSet<LearningProgress> LearningProgresses { get; set; }
+        //public DbSet<LearningProgressItem> LearningProgressItems { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
     }
