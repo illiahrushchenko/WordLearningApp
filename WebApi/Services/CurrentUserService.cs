@@ -16,7 +16,11 @@ namespace WebApi.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string? UserEmail => _httpContextAccessor.HttpContext?.User?.Claims
+        public string UserEmail => _httpContextAccessor.HttpContext?.User?.Claims
             .First(x => x.Type.Contains("email")).Value;
+
+        public int UserId => int.Parse(_httpContextAccessor.HttpContext?.User?.Claims
+            .First(x => x.Type.Contains("userId")).Value);
+
     }
 }

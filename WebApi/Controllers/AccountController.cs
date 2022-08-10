@@ -3,12 +3,7 @@ using Application.Users.Commands.CreateUser;
 using Application.Users.Queries.GetJwtToken;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
@@ -39,6 +34,18 @@ namespace WebApi.Controllers
         {
             await _mediator.Send(createUserCommand);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        [Authorize(AuthenticationSchemes = "OAuth")]
+        public IActionResult Test()
+        {
+            return Ok(new
+            {
+                Id = _currentUserService.UserId,
+                Email = _currentUserService.UserEmail
+            });
         }
     }
 }

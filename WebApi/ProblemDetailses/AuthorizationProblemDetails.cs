@@ -8,9 +8,9 @@ namespace WebApi.ProblemDetailses
 {
     public class AuthorizationProblemDetails : ProblemDetails
     {
-        public List<string> Errors { get; }
+        public string[] Errors { get; }
 
-        public AuthorizationProblemDetails(List<string> errors) : base()
+        public AuthorizationProblemDetails(string[] errors) : base()
         {
             Errors = errors;
             Title = "One or many authorization errors occurred";
@@ -18,7 +18,7 @@ namespace WebApi.ProblemDetailses
 
         public AuthorizationProblemDetails() : base()
         {
-            Errors = new List<string>();
+            Errors = new string[0];
         }
     }
 }

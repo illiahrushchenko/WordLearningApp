@@ -8,16 +8,16 @@ namespace Application.Common.Exceptions
 {
     public class UnauthorizedException : Exception
     {
-        public List<string> Errors { get; set; }
+        public string[] Errors { get; set; }
 
-        public UnauthorizedException(IEnumerable<string> errors)
+        public UnauthorizedException(string[] errors)
             : base("One or more authorization errors occurred")
         {
-            Errors = (List<string>)errors;
+            Errors = errors;
         }
 
         public UnauthorizedException(string error)
-            : this(new List<string> { error })
+            : this(new string[] { error })
         {
         }
     }
