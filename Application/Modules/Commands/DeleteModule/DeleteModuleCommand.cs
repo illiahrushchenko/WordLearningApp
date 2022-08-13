@@ -1,4 +1,5 @@
 ﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using MediatR;
@@ -15,31 +16,34 @@ namespace Application.Modules.Commands.DeleteModule
 {
     public class DeleteModuleCommand : IRequest
     {
-        public string UserEmail { get; set; }
-        public int ModuleId { get; set; }
+        public int Id { get; set; }
     }
 
     public class DeleteModuleCommandHandler : IRequestHandler<DeleteModuleCommand>
     {
-        private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
+
+        public DeleteModuleCommandHandler(ICurrentUserService currentUserService, ApplicationDbContext context)
+        {
+            _currentUserService = currentUserService;
+            _context = context;
+        }
 
         public async Task<Unit> Handle(DeleteModuleCommand request, CancellationToken cancellationToken)
         {
-            var userId = (await _userManager.FindByEmailAsync(request.UserEmail)).Id;
-
             var module = await _context.Modules
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.ModuleId);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if(module == null)
             {
-                throw new NotFoundException(nameof(module), request.ModuleId);
+                throw new NotFoundException(nameof(module), request.Id);
             }
 
-            if (module.OwnerId != userId)
+            if (module.OwnerId != _currentUserService.UserId)
             {
-                throw new PermissionDeniedException(request.UserEmail);
+                throw new PermissionDeniedException(_currentUserService.UserId);
             }
 
             _context.Modules.Remove(module);

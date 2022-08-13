@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Respawn;
@@ -15,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApi;
 
+
 namespace Application.IntegrationTests
 {
     [SetUpFixture]
@@ -23,6 +25,13 @@ namespace Application.IntegrationTests
         private static WebApplicationFactory<Startup> _factory = null!;
         private static IServiceScopeFactory _scopeFactory = null!;
         private static Checkpoint _checkpoint = null!;
+
+        private static UserData _currentUserData;
+
+        public static UserData GetCurrentUserData()
+        {
+            return _currentUserData;
+        }
 
         [OneTimeSetUp]
         public void RunBeforeAnyTests()
@@ -51,6 +60,7 @@ namespace Application.IntegrationTests
 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
+
             var user = new User
             {
                 Email = email,
@@ -61,7 +71,17 @@ namespace Application.IntegrationTests
 
             if (result.Succeeded)
             {
-                return user.Id;
+                _currentUserData = new UserData
+                {
+                    Id = user.Id,
+                    Email = user.Email
+                };
+
+                return _currentUserData.Id;
+            }
+            else if (await userManager.Users.AnyAsync(x => x.Email == email))
+            {
+                return _currentUserData.Id;
             }
 
             var errors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));

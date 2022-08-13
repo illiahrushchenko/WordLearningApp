@@ -7,12 +7,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 
 namespace Application.Modules.Queries.GetModuleDetails
 {
     public class GetModuleDetailsQuery : IRequest<ModuleDetailsDto>
     {
-        public string UserEmail { get; set; }
         public int Id { get; set; }
     }
 
@@ -21,12 +21,14 @@ namespace Application.Modules.Queries.GetModuleDetails
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
+        private readonly ICurrentUserService _currentUserService;
 
-        public GetModuleDetailsQueryHandler(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
+        public GetModuleDetailsQueryHandler(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
+            _currentUserService = currentUserService;
         }
 
         public async Task<ModuleDetailsDto> Handle(GetModuleDetailsQuery request, CancellationToken cancellationToken)
@@ -42,9 +44,9 @@ namespace Application.Modules.Queries.GetModuleDetails
             }
 
             if(!module.IsPublic &&
-                module.OwnerId != (await _userManager.FindByEmailAsync(request.UserEmail)).Id)
+                module.OwnerId != _currentUserService.UserId)
             {
-                throw new PermissionDeniedException(request.UserEmail);
+                throw new PermissionDeniedException(_currentUserService.UserId);
             }
 
             return _mapper.Map<ModuleDetailsDto>(module);

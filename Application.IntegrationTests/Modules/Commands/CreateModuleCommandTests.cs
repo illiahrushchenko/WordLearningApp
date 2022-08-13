@@ -10,8 +10,10 @@ namespace Application.IntegrationTests.Modules.Commands
 {
     public class CreateModuleCommandTests
     {
+
+
         [Test]
-        public async Task ShouldCreateModule()
+        public async Task ShouldCreateModuleWhenNoNote()
         {
             var email = "andrew@mail.com";
 
@@ -20,7 +22,6 @@ namespace Application.IntegrationTests.Modules.Commands
             var command = new CreateModuleCommand
             {
                 Name = "Animals",
-                OwnerEmail = email,
                 IsPublic = true,
                 Words = new List<CreateCardCommand>
                 {
@@ -41,12 +42,11 @@ namespace Application.IntegrationTests.Modules.Commands
         }
 
         [Test]
-        public async Task ShouldThrowNotFoundExceptionIfThereIsNoUser()
+        public async Task ShouldThrowNotFoundExceptionWhenNoUser()
         {
             var command = new CreateModuleCommand
             {
                 Name = "Animals",
-                OwnerEmail = "andrew@mail.com",
                 IsPublic = true,
                 Words = new List<CreateCardCommand>
                 {
@@ -57,6 +57,112 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
+
+            await Testing.ResetAsync();
+        }
+
+        [Test]
+        public async Task ShouldThrowValidationExceptionWhenNoName()
+        {
+            var command = new CreateModuleCommand
+            {
+                IsPublic = true,
+                Words = new List<CreateCardCommand>
+                {
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Собака", Definition = "Dog"},
+                }
+            };
+
+            await FluentActions.Invoking(() =>
+                Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
+
+            await Testing.ResetAsync();
+        }
+
+        [Test]
+        public async Task ShouldThrowValidationExceptionWhenNoIsPublicProp()
+        {
+            var command = new CreateModuleCommand
+            {
+                Name = "Animals",
+                Words = new List<CreateCardCommand>
+                {
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Собака", Definition = "Dog"},
+                }
+            };
+
+            await FluentActions.Invoking(() =>
+                Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
+
+            await Testing.ResetAsync();
+        }
+
+        [Test]
+        public async Task ShouldThrowValidationExceptionWhenShortList()
+        {
+            var command = new CreateModuleCommand
+            {
+                Name = "Animals",
+                IsPublic = true,
+                Words = new List<CreateCardCommand>
+                {
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                }
+            };
+
+            await FluentActions.Invoking(() =>
+                Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
+
+            await Testing.ResetAsync();
+        }
+
+        [Test]
+        public async Task ShouldThrowValidationExceptionWhenLongList()
+        {
+            var command = new CreateModuleCommand
+            {
+                Name = "Animals",
+                IsPublic = true,
+                Words = new List<CreateCardCommand>
+                {
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                    new CreateCardCommand{ Term = "Кіт", Definition = "Cat"},
+                }
+            };
+
+            await FluentActions.Invoking(() =>
+                Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
 
             await Testing.ResetAsync();
         }

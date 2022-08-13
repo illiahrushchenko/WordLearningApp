@@ -12,5 +12,10 @@ namespace Application.Common.Exceptions
             : base($"User {userEmail} does'nt have access to this resource")
         {
         }
+
+        public PermissionDeniedException(int userId)
+            : base($"User {userId} does'nt have access to this resource")
+        {
+        }
     }
 }

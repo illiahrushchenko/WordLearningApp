@@ -1,4 +1,5 @@
 ﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -16,8 +17,7 @@ namespace Application.Modules.Commands.UpdateModule
 {
     public class UpdateModuleCommand : IRequest<int>
     {
-        public string UserEmail { get; set; }
-        public int ModuleId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Note { get; set; }
         public bool IsPublic { get; set; }
@@ -34,30 +34,30 @@ namespace Application.Modules.Commands.UpdateModule
     public class UpdateModuleCommandHandler : IRequestHandler<UpdateModuleCommand, int>
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UpdateModuleCommandHandler(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager)
+        public UpdateModuleCommandHandler(ApplicationDbContext context, UserManager<User> userManager, ICurrentUserService currentUserService)
         {
             _context = context;
-            _mapper = mapper;
             _userManager = userManager;
+            _currentUserService = currentUserService;
         }
 
         public async Task<int> Handle(UpdateModuleCommand request, CancellationToken cancellationToken)
         {
             var module = await _context.Modules
                 .Include(x => x.Words)
-                .FirstOrDefaultAsync(x => x.Id == request.ModuleId);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if(module == null)
             {
-                throw new NotFoundException(nameof(module), module.Id);
+                throw new NotFoundException(nameof(module), _currentUserService.UserId);
             }
 
-            if (module.OwnerId != (await _userManager.FindByEmailAsync(request.UserEmail)).Id)
+            if (module.OwnerId != _currentUserService.UserId)
             {
-                throw new PermissionDeniedException(request.UserEmail);
+                throw new PermissionDeniedException(_currentUserService.UserId);
             }
 
             module.Name = request.Name;

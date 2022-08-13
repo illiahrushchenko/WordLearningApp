@@ -11,13 +11,11 @@ namespace Application.Modules.Commands.CreateModule
     {
         public CreateModuleCommandValidator()
         {
-            RuleFor(x => x.Words)
-                .NotEmpty().WithMessage("Words are required");
             RuleFor(x => x.IsPublic)
                 .NotNull().WithMessage("IsPublic property is required");
             RuleFor(x => x.Words)
-                .Must(x => x.Count >= 2).WithMessage("At least 2 words are required");
-            RuleFor(x => x.Words)
+                .Must(x => x.Count >= 2).WithMessage("At least 2 words are required")
+                .NotEmpty().WithMessage("Words are required")
                 .Must(x => x.Count <= 30).WithMessage("No more than 30 words allowed");
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required");
