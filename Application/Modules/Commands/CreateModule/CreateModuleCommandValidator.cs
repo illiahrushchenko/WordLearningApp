@@ -11,8 +11,6 @@ namespace Application.Modules.Commands.CreateModule
     {
         public CreateModuleCommandValidator()
         {
-            RuleFor(x => x.IsPublic)
-                .NotNull().WithMessage("IsPublic property is required");
             RuleFor(x => x.Words)
                 .Must(x => x.Count >= 2).WithMessage("At least 2 words are required")
                 .NotEmpty().WithMessage("Words are required")

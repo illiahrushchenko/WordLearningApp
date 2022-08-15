@@ -125,27 +125,6 @@ namespace Application.IntegrationTests.Modules.Commands
         }
 
         [Test]
-        public async Task ShouldThrowValidationExceptionWhenNoIsPublicProp()
-        {
-            await Testing.CreateUserAsync("andrew@mail.com", "Andrew", "1234");
-
-            var command = new UpdateModuleCommand
-            {
-                Name = "Animals",
-                Words = new List<UpdateCardCommand>
-                {
-                    new UpdateCardCommand{ Term = "Кіт", Definition = "Cat"},
-                    new UpdateCardCommand{ Term = "Собака", Definition = "Dog"},
-                }
-            };
-
-            await FluentActions.Invoking(() =>
-                Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
-        }
-
-        [Test]
         public async Task ShouldThrowValidationExceptionWhenShortList()
         {
             await Testing.CreateUserAsync("andrew@mail.com", "Andrew", "1234");

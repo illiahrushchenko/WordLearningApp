@@ -11,8 +11,8 @@ namespace Application.Modules.Commands.UpdateModule
     {
         public UpdateModuleCommandValidator()
         {
-            RuleFor(x => x.IsPublic)
-                .NotNull().WithMessage("IsPublic property is required");
+            RuleFor(x => x.Id)
+                .Must(x => x != 0).WithMessage("Id shouldn't be 0");
             RuleFor(x => x.Words)
                 .Must(x => x.Count >= 2).WithMessage("At least 2 words are required")
                 .NotEmpty().WithMessage("Words are required")
