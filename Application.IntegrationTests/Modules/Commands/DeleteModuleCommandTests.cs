@@ -1,4 +1,5 @@
-﻿using Application.Modules.Commands.CreateModule;
+﻿using Application.Common.Exceptions;
+using Application.Modules.Commands.CreateModule;
 using Application.Modules.Commands.DeleteModule;
 using Domain.Entities;
 using FluentAssertions;
@@ -41,6 +42,39 @@ namespace Application.IntegrationTests.Modules.Commands
             var module = await Testing.FindAsync<Module>(moduleId);
 
             module.Should().BeNull();
+
+            await Testing.ResetAsync();
+        }
+
+        [Test]
+        public async Task ShouldThrowNotFoundExceptionWhenNoModule()
+        {
+            var email = "andrew@mail.com";
+
+            await Testing.CreateUserAsync(email, "Andrew", "1234");
+
+            var command = new DeleteModuleCommand
+            {
+                Id = 1
+            };
+
+            await FluentActions.Invoking(() =>
+                Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
+
+            await Testing.ResetAsync();
+        }
+
+        [Test]
+        public async Task ShouldThrowValidationExceptionWhenNoId()
+        {
+            var email = "andrew@mail.com";
+
+            await Testing.CreateUserAsync(email, "Andrew", "1234");
+
+            var command = new DeleteModuleCommand();
+
+            await FluentActions.Invoking(() =>
+                Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
 
             await Testing.ResetAsync();
         }
