@@ -1,6 +1,8 @@
 ﻿using Application.Modules.Commands.CreateModule;
 using Application.Modules.Commands.UpdateModule;
+using Application.Modules.DTOs;
 using Application.Modules.Queries.GetModuleDetails;
+using Application.Modules.Queries.GetPublicModules;
 using AutoMapper;
 using Domain.Entities;
 
@@ -16,6 +18,7 @@ namespace Application.Common.MappingProfiles
             CreateMap<UpdateCardCommand, Card>().ReverseMap();
             CreateMap<ModuleDetailsDto, Module>().ReverseMap();
             CreateMap<CardDto, Card>().ReverseMap();
+            CreateMap<ModuleBriefDto, Module>().ReverseMap();
         }
     }
 }

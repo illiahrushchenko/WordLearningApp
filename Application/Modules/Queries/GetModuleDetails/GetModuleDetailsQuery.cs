@@ -4,10 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Domain.Entities;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Modules.DTOs;
 
 namespace Application.Modules.Queries.GetModuleDetails
 {
@@ -20,14 +19,12 @@ namespace Application.Modules.Queries.GetModuleDetails
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
         private readonly ICurrentUserService _currentUserService;
 
-        public GetModuleDetailsQueryHandler(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager, ICurrentUserService currentUserService)
+        public GetModuleDetailsQueryHandler(ApplicationDbContext context, IMapper mapper, ICurrentUserService currentUserService)
         {
             _context = context;
             _mapper = mapper;
-            _userManager = userManager;
             _currentUserService = currentUserService;
         }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Modules.Queries.GetModuleDetails
+namespace Application.Modules.DTOs
 {
     public class CardDto
     {
