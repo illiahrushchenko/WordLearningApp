@@ -6,5 +6,6 @@ namespace Domain.Entities
     public class User : IdentityUser<int>
     {
         public List<Module> Modules { get; set; }
+        public List<LearningProgress> LearningProgresses { get; set; }
     }
 }

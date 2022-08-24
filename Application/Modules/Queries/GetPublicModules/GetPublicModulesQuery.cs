@@ -6,7 +6,6 @@ using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common.Models;
 using Application.Modules.DTOs;
 
 namespace Application.Modules.Queries.GetPublicModules
