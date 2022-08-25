@@ -1,14 +1,16 @@
 ﻿using Application.Common.Exceptions;
+using Application.LearningProgresses.Commands.CreateLearningProgress;
+using Application.LearningProgresses.Queries.GetLearningProgress;
 using Application.Modules.Commands.CreateModule;
-using Application.Quizes.Commands.CreateLearningProgress;
-using Application.Quizes.Queries.GetLearningProgress;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.IntegrationTests.Quizes.Queries
+namespace Application.IntegrationTests.LearningProgresses.Queries
 {
     public class GetLearningProgressQueryTests
     {
@@ -39,6 +41,8 @@ namespace Application.IntegrationTests.Quizes.Queries
             });
 
             learningProgress.LearningProgressItems.Should().HaveCount(2);
+            learningProgress.QuizAnswersCount.Should().Be(0);
+            learningProgress.WritingAnswersCount.Should().Be(0);
 
             await Testing.ResetAsync();
         }

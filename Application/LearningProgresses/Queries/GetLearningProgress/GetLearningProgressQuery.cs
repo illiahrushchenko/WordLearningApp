@@ -1,6 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Application.Quizes.DTOs;
+using Application.LearningProgresses.DTOs;
 using AutoMapper;
 using Infrastructure.Persistence;
 using MediatR;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Quizes.Queries.GetLearningProgress
+namespace Application.LearningProgresses.Queries.GetLearningProgress
 {
     public class GetLearningProgressQuery : IRequest<LearningProgressDto>
     {
@@ -36,12 +36,12 @@ namespace Application.Quizes.Queries.GetLearningProgress
         {
             var learningProgress = await _context.LearningProgresses
                 .Include(x => x.LearningProgressItems)
-                .FirstOrDefaultAsync(x => 
-                    x.UserId == _currentUserService.UserId 
+                .FirstOrDefaultAsync(x =>
+                    x.UserId == _currentUserService.UserId
                     && x.ModuleId == request.ModuleId,
                     cancellationToken);
 
-            if(learningProgress == null)
+            if (learningProgress == null)
             {
                 throw new NotFoundException($"No LearningProgress with UserId {_currentUserService.UserId} and ModuleId {request.ModuleId}");
             }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Quizes.Queries.GetLearningProgress
+namespace Application.LearningProgresses.Queries.GetLearningProgress
 {
     public class GetLearningProgressQueryValidator : AbstractValidator<GetLearningProgressQuery>
     {

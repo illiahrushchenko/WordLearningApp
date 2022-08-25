@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Quizes.Commands.CreateLearningProgress
+namespace Application.LearningProgresses.Commands.CreateLearningProgress
 {
     public class CreateLearningProgressCommand : IRequest
     {

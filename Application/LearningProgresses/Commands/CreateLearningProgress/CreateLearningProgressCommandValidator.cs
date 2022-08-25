@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Quizes.Commands.CreateLearningProgress
+namespace Application.LearningProgresses.Commands.CreateLearningProgress
 {
     public class CreateLearningProgressCommandValidator : AbstractValidator<CreateLearningProgressCommand>
     {

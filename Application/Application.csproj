@@ -17,4 +17,12 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="LearningProgresses\Commands\DeleteLearningProgress\" />
+    <Folder Include="LearningProgressItems\Commands\AddQuizAnswer\" />
+    <Folder Include="LearningProgressItems\Commands\AddWritingAnswer\" />
+    <Folder Include="LearningProgressItems\Queries\GetNextQuizQuestion\" />
+    <Folder Include="LearningProgressItems\Queries\GetNextWritingQuestion\" />
+  </ItemGroup>
+
 </Project>
