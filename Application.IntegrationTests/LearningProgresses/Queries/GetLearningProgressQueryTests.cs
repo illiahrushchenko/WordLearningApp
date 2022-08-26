@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.IntegrationTests.LearningProgresses.Queries
 {
-    public class GetLearningProgressQueryTests
+    public class GetLearningProgressQueryTests : TestBase
     {
         [Test]
         public async Task ShouldGetProgress()
@@ -43,8 +43,6 @@ namespace Application.IntegrationTests.LearningProgresses.Queries
             learningProgress.LearningProgressItems.Should().HaveCount(2);
             learningProgress.QuizAnswersCount.Should().Be(0);
             learningProgress.WritingAnswersCount.Should().Be(0);
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -59,8 +57,6 @@ namespace Application.IntegrationTests.LearningProgresses.Queries
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -75,8 +71,6 @@ namespace Application.IntegrationTests.LearningProgresses.Queries
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
     }
 }

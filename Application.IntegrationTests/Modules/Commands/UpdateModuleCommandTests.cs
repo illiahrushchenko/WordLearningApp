@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.IntegrationTests.Modules.Commands
 {
-    public class UpdateModuleCommandTests
+    public class UpdateModuleCommandTests : TestBase
     {
         [Test]
         public async Task ShouldThrowNotFoundExceptionWhenNoModule()
@@ -31,8 +31,6 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -76,8 +74,6 @@ namespace Application.IntegrationTests.Modules.Commands
             module.Should().NotBeNull();
             module.Name.Should().Be(command.Name);
             module.Words[1].Definition.Should().Be(command.Words[1].Definition);
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -98,8 +94,6 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -120,8 +114,6 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -141,8 +133,6 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -192,8 +182,6 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
     }
 }

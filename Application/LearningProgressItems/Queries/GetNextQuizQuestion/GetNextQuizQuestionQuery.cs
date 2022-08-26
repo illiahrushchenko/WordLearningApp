@@ -13,12 +13,12 @@ using Application.Common.Exceptions;
 
 namespace Application.LearningProgressItems.Queries.GetNextQuizQuestion
 {
-    public class GetNextQuizQuery : IRequest<QuizDto>
+    public class GetNextQuizQuestionQuery : IRequest<QuizQuestionDto>
     {
         public int ModuleId { get; set; }
     }
 
-    public class GetNextQuizQueryHandler : IRequestHandler<GetNextQuizQuery, QuizDto>
+    public class GetNextQuizQueryHandler : IRequestHandler<GetNextQuizQuestionQuery, QuizQuestionDto>
     {
         private readonly ApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
@@ -29,7 +29,7 @@ namespace Application.LearningProgressItems.Queries.GetNextQuizQuestion
             _context = context;
         }
 
-        public async Task<QuizDto> Handle(GetNextQuizQuery request, CancellationToken cancellationToken)
+        public async Task<QuizQuestionDto> Handle(GetNextQuizQuestionQuery request, CancellationToken cancellationToken)
         {
             var learningProgress = await _context.LearningProgresses
                 .Include(x => x.LearningProgressItems)
@@ -79,7 +79,7 @@ namespace Application.LearningProgressItems.Queries.GetNextQuizQuestion
                 cardDefinitions.Remove(randomDefinition);
             }
 
-            return new QuizDto
+            return new QuizQuestionDto
             {
                 Term = card.Term,
                 CardId = card.Id,

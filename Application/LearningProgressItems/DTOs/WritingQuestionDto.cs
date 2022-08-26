@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.LearningProgressItems.DTOs
 {
-    public class QuizDto
+    public class WritingQuestionDto
     {
         public int CardId { get; set; }
         public string Term { get; set; }
-
-        public List<string> Options { get; set; }
     }
 }

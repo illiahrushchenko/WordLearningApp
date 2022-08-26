@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Application.LearningProgressItems.Queries.GetNextQuizQuestion
 {
-    public class GetNextQuizQueryValidator : AbstractValidator<GetNextQuizQuery>
+    public class GetNextQuizQuestionQueryValidator : AbstractValidator<GetNextQuizQuestionQuery>
     {
-        public GetNextQuizQueryValidator()
+        public GetNextQuizQuestionQueryValidator()
         {
             RuleFor(x => x.ModuleId)
                 .GreaterThan(0).WithMessage("ModuleId must be > 0");

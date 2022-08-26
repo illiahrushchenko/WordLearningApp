@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.IntegrationTests.Modules.Commands
 {
-    class DeleteModuleCommandTests
+    class DeleteModuleCommandTests : TestBase
     {
         [Test]
         public async Task ShouldDeleteModule()
@@ -42,8 +42,6 @@ namespace Application.IntegrationTests.Modules.Commands
             var module = await Testing.FindAsync<Module>(moduleId);
 
             module.Should().BeNull();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -60,8 +58,6 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -75,8 +71,6 @@ namespace Application.IntegrationTests.Modules.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
     }
 }

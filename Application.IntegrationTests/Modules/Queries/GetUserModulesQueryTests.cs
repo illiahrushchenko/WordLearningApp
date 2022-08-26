@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.IntegrationTests.Modules.Queries
 {
-    public class GetUserModulesQueryTests
+    public class GetUserModulesQueryTests : TestBase
     {
         [Test]
         public async Task ShouldGetConcreteUserModules()
@@ -56,8 +56,6 @@ namespace Application.IntegrationTests.Modules.Queries
                 .And.HaveCount(1);
             publicModules.HasNextPage.Should().BeFalse();
             publicModules.HasPreviousPage.Should().BeFalse();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -73,8 +71,6 @@ namespace Application.IntegrationTests.Modules.Queries
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -90,8 +86,6 @@ namespace Application.IntegrationTests.Modules.Queries
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
     }
 }

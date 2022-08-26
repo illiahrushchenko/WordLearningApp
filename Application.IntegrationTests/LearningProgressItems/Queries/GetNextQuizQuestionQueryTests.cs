@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.IntegrationTests.LearningProgressItems.Queries
 {
-    public class GetNextQuizQueryTests
+    public class GetNextQuizQuestionQueryTests : TestBase
     {
         [Test]
         public async Task ShouldGetQuiz()
@@ -38,7 +38,7 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
                 ModuleId = moduleId
             });
 
-            var quizDto = await Testing.SendAsync(new GetNextQuizQuery
+            var quizDto = await Testing.SendAsync(new GetNextQuizQuestionQuery
             {
                 ModuleId = moduleId
             });
@@ -48,8 +48,6 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
             quizDto.Options.Should().OnlyHaveUniqueItems()
                 .And.HaveCount(2)
                 .And.Contain(command.Words[0].Definition);
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -57,15 +55,13 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
         {
             await Testing.CreateUserAsync("andrew@mail.com", "Andrew", "1234");
 
-            var command = new GetNextQuizQuery
+            var command = new GetNextQuizQuestionQuery
             {
                 ModuleId = 0
             };
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -73,15 +69,13 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
         {
             await Testing.CreateUserAsync("andrew@mail.com", "Andrew", "1234");
 
-            var command = new GetNextQuizQuery
+            var command = new GetNextQuizQuestionQuery
             {
                 ModuleId = 1
             };
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -100,17 +94,16 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
                 }
             });
 
-            var command = new GetNextQuizQuery
+            var command = new GetNextQuizQuestionQuery
             {
                 ModuleId = 1
             };
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
-
-            await Testing.ResetAsync();
         }
 
+        [Test]
         public async Task ShouldThrowNotFoundExceptionWhenAllQuizesAnswered()
         {
             await Testing.CreateUserAsync("andrew@mail.com", "Andrew", "1234");
@@ -137,7 +130,7 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
             //Answering all quizes
             for (int i = 0; i < 2; i++)
             {
-                var nextQuiz = await Testing.SendAsync(new GetNextQuizQuery
+                var nextQuiz = await Testing.SendAsync(new GetNextQuizQuestionQuery
                 {
                     ModuleId = moduleId
                 });
@@ -150,15 +143,13 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
             }
 
             //Get next quiz when all quizes alredy answered
-            var command = new GetNextQuizQuery
+            var command = new GetNextQuizQuestionQuery
             {
                 ModuleId = moduleId
             };
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
-
-            await Testing.ResetAsync();
         }
     }
 }

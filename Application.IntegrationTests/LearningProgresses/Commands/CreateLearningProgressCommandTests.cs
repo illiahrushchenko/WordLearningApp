@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.IntegrationTests.LearningProgresses.Commands
 {
-    public class CreateLearningProgressCommandTests
+    public class CreateLearningProgressCommandTests : TestBase
     {
         [Test]
         public async Task ShouldThrowNotFoundExceptionWhenNoModule()
@@ -24,8 +24,6 @@ namespace Application.IntegrationTests.LearningProgresses.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -40,8 +38,6 @@ namespace Application.IntegrationTests.LearningProgresses.Commands
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
     }
 }

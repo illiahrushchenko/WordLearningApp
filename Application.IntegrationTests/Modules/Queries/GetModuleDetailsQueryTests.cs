@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Application.IntegrationTests.Modules.Queries
 {
-    public class GetModuleDetailsQueryTests
+    public class GetModuleDetailsQueryTests : TestBase
     {
         [Test]
         public async Task ShouldGetModule()
@@ -38,8 +38,6 @@ namespace Application.IntegrationTests.Modules.Queries
             module.Name.Should().Be(command.Name);
             module.IsPublic.Should().Be(command.IsPublic);
             module.Note.Should().Be(command.Note);
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -54,8 +52,6 @@ namespace Application.IntegrationTests.Modules.Queries
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<NotFoundException>();
-
-            await Testing.ResetAsync();
         }
 
         [Test]
@@ -67,8 +63,6 @@ namespace Application.IntegrationTests.Modules.Queries
 
             await FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().ThrowAsync<ValidationException>();
-
-            await Testing.ResetAsync();
         }
     }
 }
