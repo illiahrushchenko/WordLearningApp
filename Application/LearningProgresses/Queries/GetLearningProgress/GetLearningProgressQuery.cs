@@ -37,8 +37,7 @@ namespace Application.LearningProgresses.Queries.GetLearningProgress
             var learningProgress = await _context.LearningProgresses
                 .Include(x => x.LearningProgressItems)
                 .FirstOrDefaultAsync(x =>
-                    x.UserId == _currentUserService.UserId
-                    && x.ModuleId == request.ModuleId,
+                    x.UserId == _currentUserService.UserId && x.ModuleId == request.ModuleId,
                     cancellationToken);
 
             if (learningProgress == null)

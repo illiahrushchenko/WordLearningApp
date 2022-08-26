@@ -1,4 +1,5 @@
 ﻿using Application.Common.Behaviors;
+using Application.Common.Interfaces;
 using Application.Common.MappingProfiles;
 using FluentValidation;
 using MediatR;

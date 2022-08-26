@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Quizes\Commands\" />
+    <Folder Include="LearningProgressItems\Command\" />
   </ItemGroup>
 
 </Project>
