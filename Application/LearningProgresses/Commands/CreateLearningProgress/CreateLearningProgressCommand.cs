@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace Application.LearningProgresses.Commands.CreateLearningProgress
 {
-    public class CreateLearningProgressCommand : IRequest
+    public class CreateLearningProgressCommand : IRequest<int>
     {
         public int ModuleId { get; set; }
     }
 
-    public class CreateLearningProgressHandler : IRequestHandler<CreateLearningProgressCommand>
+    public class CreateLearningProgressHandler : IRequestHandler<CreateLearningProgressCommand, int>
     {
         private readonly ApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;
@@ -29,7 +29,7 @@ namespace Application.LearningProgresses.Commands.CreateLearningProgress
             _currentUserService = currentUserService;
         }
 
-        public async Task<Unit> Handle(CreateLearningProgressCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateLearningProgressCommand request, CancellationToken cancellationToken)
         {
             var module = await _context.Modules
                 .Include(x => x.Words)
@@ -59,7 +59,7 @@ namespace Application.LearningProgresses.Commands.CreateLearningProgress
             await _context.AddAsync(learningProgress, cancellationToken);
             await _context.SaveChangesAsync();
 
-            return Unit.Value;
+            return learningProgress.Id;
         }
     }
 }

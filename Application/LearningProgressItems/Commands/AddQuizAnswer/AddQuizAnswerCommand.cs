@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Infrastructure.Persistence;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +12,28 @@ namespace Application.LearningProgressItems.Commands.AddQuizAnswer
 {
     public class AddQuizAnswerCommand : IRequest
     {
-        public int CardId { get; set; }
-        public string Answer { get; set; }
+        public int LearningProgressItemId { get; set; }
     }
 
     public class AddQuizAnswerCommandHandler : IRequestHandler<AddQuizAnswerCommand>
     {
-        public Task<Unit> Handle(AddQuizAnswerCommand request, CancellationToken cancellationToken)
+        private readonly ApplicationDbContext _context;
+
+        public AddQuizAnswerCommandHandler(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public async Task<Unit> Handle(AddQuizAnswerCommand request, CancellationToken cancellationToken)
+        {
+            var learningProgressItem = await _context.LearningProgressItems
+                .FirstOrDefaultAsync(x => x.Id == request.LearningProgressItemId, cancellationToken);
+
+            learningProgressItem.AnsweredWithQuiz = true;
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
         }
     }
 }

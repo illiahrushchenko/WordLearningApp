@@ -8,6 +8,8 @@ namespace Application.LearningProgresses.DTOs
 {
     public class LearningProgressDto
     {
+        public int LearningProgressId { get; set; }
+
         public List<LearningProgressItemDto> LearningProgressItems { get; set; }
 
         public int QuizAnswersCount =>

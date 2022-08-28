@@ -119,7 +119,7 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
 
             var moduleId = await Testing.SendAsync(createModuleCommand);
 
-            await Testing.SendAsync(new CreateLearningProgressCommand
+            var progressId = await Testing.SendAsync(new CreateLearningProgressCommand
             {
                 ModuleId = moduleId
             });
@@ -134,8 +134,7 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
 
                 await Testing.SendAsync(new AddWritingAnswerCommand
                 {
-                    CardId = nextQuiz.CardId,
-                    Answer = createModuleCommand.Words[i].Definition
+                    LearningProgressItemId = nextQuiz.LearningProgressItemId
                 });
             }
 

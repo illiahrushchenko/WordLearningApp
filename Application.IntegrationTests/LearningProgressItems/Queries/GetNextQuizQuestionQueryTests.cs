@@ -45,6 +45,7 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
 
             quizDto.Should().NotBeNull();
             quizDto.Term.Should().Be(command.Words[0].Term);
+            quizDto.CorrectAnswer.Should().Be(command.Words[0].Definition);
             quizDto.Options.Should().OnlyHaveUniqueItems()
                 .And.HaveCount(2)
                 .And.Contain(command.Words[0].Definition);
@@ -122,7 +123,7 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
 
             var moduleId = await Testing.SendAsync(createModuleCommand);
 
-            await Testing.SendAsync(new CreateLearningProgressCommand
+            var progressId = await Testing.SendAsync(new CreateLearningProgressCommand
             {
                 ModuleId = moduleId
             });
@@ -137,8 +138,7 @@ namespace Application.IntegrationTests.LearningProgressItems.Queries
 
                 await Testing.SendAsync(new AddQuizAnswerCommand
                 {
-                    CardId = nextQuiz.CardId,
-                    Answer = createModuleCommand.Words[i].Definition
+                    LearningProgressItemId = nextQuiz.LearningProgressItemId
                 });
             }
 

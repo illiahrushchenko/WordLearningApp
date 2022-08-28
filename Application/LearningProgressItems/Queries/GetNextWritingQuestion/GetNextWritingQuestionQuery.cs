@@ -32,6 +32,7 @@ namespace Application.LearningProgressItems.Queries.GetNextWritingQuestion
         public async Task<WritingQuestionDto> Handle(GetNextWritingQuestionQuery request, CancellationToken cancellationToken)
         {
             var learningProgress = await _context.LearningProgresses
+                .AsNoTracking()
                 .Include(x => x.LearningProgressItems)
                     .ThenInclude(x => x.Card)
                 .FirstOrDefaultAsync(x =>
@@ -43,19 +44,21 @@ namespace Application.LearningProgressItems.Queries.GetNextWritingQuestion
                 throw new NotFoundException($"No LearningProgress with UserId {_currentUserService.UserId} and ModuleId {request.ModuleId}");
             }
 
-            var card = learningProgress.LearningProgressItems
-                .FirstOrDefault(x => !x.AnsweredWithQuiz)
-                .Card;
+            var learningProgressItem = learningProgress.LearningProgressItems
+                .FirstOrDefault(x => !x.AnsweredWithWriting);
 
-            if (card == null)
+            if (learningProgressItem == null)
             {
                 throw new NotFoundException("All quizes are alredy answered");
             }
 
+            var card = learningProgressItem.Card;
+
             return new WritingQuestionDto
             {
-                CardId = card.Id,
-                Term = card.Term
+                LearningProgressItemId = learningProgressItem.Id,
+                Term = card.Term,
+                CorrectAnswer = card.Definition
             };
         }
     }

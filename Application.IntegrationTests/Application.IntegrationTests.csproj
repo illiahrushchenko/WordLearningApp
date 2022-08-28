@@ -24,8 +24,4 @@
     <ProjectReference Include="..\WebApi\WebApi.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="LearningProgressItems\Command\" />
-  </ItemGroup>
-
 </Project>

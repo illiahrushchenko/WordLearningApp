@@ -8,7 +8,9 @@ namespace Application.LearningProgressItems.DTOs
 {
     public class WritingQuestionDto
     {
-        public int CardId { get; set; }
+        public int LearningProgressItemId { get; set; }
         public string Term { get; set; }
+
+        public string CorrectAnswer { get; set; }
     }
 }

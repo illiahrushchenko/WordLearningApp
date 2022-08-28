@@ -32,9 +32,11 @@ namespace Application.LearningProgressItems.Queries.GetNextQuizQuestion
         public async Task<QuizQuestionDto> Handle(GetNextQuizQuestionQuery request, CancellationToken cancellationToken)
         {
             var learningProgress = await _context.LearningProgresses
+                .AsNoTracking()
                 .Include(x => x.LearningProgressItems)
                     .ThenInclude(x => x.Card)
                 .Include(x => x.Module)
+                    .ThenInclude(x => x.Words)
                 .FirstOrDefaultAsync(x =>
                     x.UserId == _currentUserService.UserId && x.ModuleId == request.ModuleId,
                     cancellationToken);
@@ -44,15 +46,15 @@ namespace Application.LearningProgressItems.Queries.GetNextQuizQuestion
                 throw new NotFoundException($"No LearningProgress with UserId {_currentUserService.UserId} and ModuleId {request.ModuleId}");
             }
 
-            var card = learningProgress.LearningProgressItems
-                .FirstOrDefault(x => !x.AnsweredWithQuiz)
-                .Card;
+            var learningProgressItem = learningProgress.LearningProgressItems
+                .FirstOrDefault(x => !x.AnsweredWithQuiz);
 
-            if(card == null)
+            if(learningProgressItem == null)
             {
                 throw new NotFoundException("All quizes are alredy answered");
             }
 
+            var card = learningProgressItem.Card;
             var module = learningProgress.Module;
 
             if (!module.IsPublic &&
@@ -82,8 +84,9 @@ namespace Application.LearningProgressItems.Queries.GetNextQuizQuestion
             return new QuizQuestionDto
             {
                 Term = card.Term,
-                CardId = card.Id,
-                Options = options
+                LearningProgressItemId = learningProgressItem.Id,
+                Options = options,
+                CorrectAnswer = card.Definition
             };
         }
     }

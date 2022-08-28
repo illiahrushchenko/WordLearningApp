@@ -13,7 +13,9 @@ namespace Application.Common.MappingProfiles
     {
         public LearningProgressProfile()
         {
-            CreateMap<LearningProgressDto, LearningProgress>().ReverseMap();
+            CreateMap<LearningProgress, LearningProgressDto>()
+                .ForMember(dest => dest.LearningProgressId, opt => opt.MapFrom(src => src.Id))
+                .ReverseMap();
             CreateMap<LearningProgressItemDto, LearningProgressItem>().ReverseMap();
         }
     }
